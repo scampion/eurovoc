@@ -1,4 +1,4 @@
-import urllib
+import urllib.request
 import xml.etree.ElementTree as ET
 import joblib
 
