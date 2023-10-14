@@ -22,7 +22,7 @@ def load_xml(url, cache=True):
 
 def thesaurus_uris(cache=True):
     tree = load_xml("http://publications.europa.eu/resource/dataset/eurovoc", cache)
-    return {r.attrib['thesaurus_id']: r.attrib['thesaurus_uri']
+    return {int(r.attrib['thesaurus_id']): r.attrib['thesaurus_uri']
             for r in tree.findall(".//record[@thesaurus_id!='']")}
 
 
