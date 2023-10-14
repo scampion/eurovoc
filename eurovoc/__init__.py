@@ -16,6 +16,8 @@ def load_xml(url, cache=True):
         memory.clear()
     req = urllib.request.Request(url, None, headers)
     response = urllib.request.urlopen(req)
+    if response.getcode() != 200:
+        raise Exception(f"Error {response.getcode()} when loading {url}")
     xml = response.read()
     return ET.fromstring(xml)
 
@@ -32,5 +34,8 @@ def thesaurus_en_labels(cache=True):
             tree = load_xml(v, cache)
             node = tree.find(".//dcterms:title[@xml:lang='en']",
                              {'dcterms': "http://purl.org/dc/terms/", "xml": "http://www.w3.org/XML/1998/namespace"})
-            yield k, node.text.replace(k, '').strip()
+            label = node.text.replace(str(k), '').strip()
+            if label.startswith('0 '):
+                label = label[2:]
+            yield k, label
     return dict(_thesaurus_en_labels())
