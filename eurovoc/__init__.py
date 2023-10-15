@@ -44,11 +44,12 @@ def thesaurus_en_labels(cache=True):
 
 
 class Eurovoc:
-    def __init__(self, cache=True):
-        self.cache = cache
-
-    def labels_id_gen_(self, lang='en'):
+    def __init__(self, cache=True, lang='en'):
         assert lang == 'en', "Only english is supported for now"
+        self.cache = cache
+        self.lang = lang
+
+    def labels_id_gen_(self):
         tree = load_xml("http://publications.europa.eu/resource/dataset/eurovoc", self.cache)
         for node in tree.findall(".//xs:enumeration", {'xs': "http://www.w3.org/2001/XMLSchema"}):
             doc = node.find('./xs:annotation/xs:documentation', {'xs': "http://www.w3.org/2001/XMLSchema"})
@@ -63,9 +64,9 @@ class Eurovoc:
                     break
 
     @property
-    def labels(self, lang='en'):
-        return dict(self.labels_id_gen_(lang))
+    def labels(self):
+        return dict(self.labels_id_gen_())
 
     @property
-    def identifers(self, lang='en'):
-        return {v: k for k, v in self.labels_id_gen_(lang).items()}
+    def identifers(self):
+        return {v: k for k, v in self.labels_id_gen_()}
