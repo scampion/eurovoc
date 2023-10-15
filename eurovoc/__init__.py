@@ -33,9 +33,39 @@ def thesaurus_en_labels(cache=True):
         for k, v in thesaurus_uris(cache).items():
             tree = load_xml(v, cache)
             node = tree.find(".//dcterms:title[@xml:lang='en']",
-                             {'dcterms': "http://purl.org/dc/terms/", "xml": "http://www.w3.org/XML/1998/namespace"})
+                             {'dcterms': "http://purl.org/dc/terms/",
+                              "xml": "http://www.w3.org/XML/1998/namespace"})
             label = node.text.replace(str(k), '').strip()
             if label.startswith('0 '):
                 label = label[2:]
             yield k, label
+
     return dict(_thesaurus_en_labels())
+
+
+class Eurovoc:
+    def __init__(self, cache=True):
+        self.cache = cache
+
+    def labels_id_gen_(self, lang='en'):
+        assert lang == 'en', "Only english is supported for now"
+        tree = load_xml("http://publications.europa.eu/resource/dataset/eurovoc", self.cache)
+        for node in tree.findall(".//xs:enumeration", {'xs': "http://www.w3.org/2001/XMLSchema"}):
+            doc = node.find('./xs:annotation/xs:documentation', {'xs': "http://www.w3.org/2001/XMLSchema"})
+            if doc is not None:
+                try:
+                    label = doc.text.split('/')[0].strip()
+                    identifier = node.attrib['value'].replace('eurovoc:', '')
+                    yield identifier, label
+                except Exception as e:
+                    print(e)
+                    import IPython; IPython.embed()
+                    break
+
+    @property
+    def labels(self, lang='en'):
+        return dict(self.labels_id_gen_(lang))
+
+    @property
+    def identifers(self, lang='en'):
+        return {v: k for k, v in self.labels_id_gen_(lang).items()}
