@@ -1,11 +1,11 @@
-import re
-
-from setuptools import find_packages, setup
+from datetime import datetime
+from setuptools import setup
 
 with open("README.md") as f:
     readme = f.read()
 
-version = "1.0.2"
+now = datetime.now()
+version = now.strftime("%y.%m.%d") + '.0'
 
 setup(
     name="eurovoc",
@@ -16,5 +16,6 @@ setup(
     author="Sebastien Campion",
     license="MIT",
     packages=['eurovoc'],
+    url='https://github.com/scampion/eurovoc',
     install_requires=open("requirements.txt").read().splitlines(),
 )

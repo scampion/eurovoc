@@ -6,17 +6,18 @@ http://publications.europa.eu/resource/dataset/eurovoc
 
 ```python
 import eurovoc
-eurovoc.thesaurus_en_labels()
+eurovoc.thesaurus_en_labels
 ```
 
 will return a dictionary of EuroVoc labels in English.
 
 
 ```python 
-from eurovoc import Eurovoc
+import eurovoc
 
-Eurovoc().labels()
-Eurovoc().identifiers()
+eurovoc.en_labels
+eurovoc.en_identifiers
+
 ```
 
 Will return a dictionnary and the reverse with term and id like :
